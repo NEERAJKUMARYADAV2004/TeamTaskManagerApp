@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  /* Premium Obsidian Dark Palette */
+  --color-glass-light: rgba(255, 255, 255, 0.03);
+  --color-glass-medium: rgba(20, 20, 25, 0.6);
+  --color-glass-dark: rgba(10, 10, 12, 0.8);
+
+  --color-brand-primary: #8b5cf6; /* Vibrant Violet */
+  --color-brand-secondary: #c084fc;
+  --color-brand-accent: #f472b6;
+
+  --shadow-glass-light: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+  --shadow-glass-dark: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+
+  --background-image-mesh-gradient: radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%), 
+                                    radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.08) 0px, transparent 50%),
+                                    radial-gradient(at 50% 50%, rgba(10, 10, 12, 1) 0px, rgba(15, 15, 18, 1) 100%);
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: #e2e8f0;
+  background-color: #0a0a0c;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #0a0a0c;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Custom Scrollbar for Premium Dashboard */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+/* Subtle Glow Animations */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.glow-bg {
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: pulse-glow 10s infinite ease-in-out;
+}
