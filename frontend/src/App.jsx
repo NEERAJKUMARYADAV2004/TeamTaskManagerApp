@@ -202,6 +202,37 @@ const TaskCard = ({ task, onStatusChange, onDelete, onEdit, isAdmin }) => {
   );
 };
 
+const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, type = "danger" }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <GlassCard className="w-full max-w-sm p-8 bg-[var(--color-glass-dark)] border-white/10 shadow-2xl">
+        <div className="flex flex-col items-center text-center">
+          <div className={`w-16 h-16 rounded-2xl mb-6 flex items-center justify-center ${type === 'danger' ? 'bg-rose-500/20 text-rose-500' : 'bg-indigo-500/20 text-indigo-500'}`}>
+            <AlertCircle size={32} />
+          </div>
+          <h2 className="text-2xl font-black text-white mb-2">{title}</h2>
+          <p className="text-white/60 text-sm mb-8 leading-relaxed">
+            {message}
+          </p>
+          <div className="flex gap-3 w-full">
+            <Button variant="outline" onClick={onCancel} className="flex-1 py-3 text-xs">
+              Cancel
+            </Button>
+            <Button 
+              onClick={onConfirm} 
+              className={`flex-1 py-3 text-xs ${type === 'danger' ? 'bg-rose-600 hover:bg-rose-500' : ''}`}
+            >
+              Confirm
+            </Button>
+          </div>
+        </div>
+      </GlassCard>
+    </div>
+  );
+};
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -215,6 +246,15 @@ export default function App() {
   const [editingProject, setEditingProject] = useState(null);
   const [newTask, setNewTask] = useState({ title: '', description: '', assignedTo: '', dueDate: '', project: '' });
   const [editingTask, setEditingTask] = useState(null);
+
+  // Custom Alert State
+  const [confirmConfig, setConfirmConfig] = useState({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    onConfirm: () => {}, 
+    type: 'danger' 
+  });
 
   const fetchProjects = async () => {
     try {
@@ -312,20 +352,36 @@ export default function App() {
     setTasks(tasks.map(t => t.id === taskId ? { ...t, status } : t));
   };
 
-  const deleteTask = async (taskId) => {
-    if (!window.confirm('Eradicate this task?')) return;
-    await API.delete(`/tasks/${taskId}`);
-    setTasks(tasks.filter(t => t.id !== taskId));
+  const deleteTask = (taskId) => {
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Delete Task?',
+      message: 'This action is irreversible. This task will be removed from existence in the workspace.',
+      type: 'danger',
+      onConfirm: async () => {
+        await API.delete(`/tasks/${taskId}`);
+        setTasks(prev => prev.filter(t => t.id !== taskId));
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+      }
+    });
   };
 
-  const deleteProject = async (projectId) => {
-    if (!window.confirm('Obliterate this project and all its tasks?')) return;
-    await API.delete(`/projects/${projectId}`);
-    setProjects(projects.filter(p => p.id !== projectId));
-    if (selectedProject?.id === projectId) {
-      setSelectedProject(null);
-      setTasks([]);
-    }
+  const deleteProject = (projectId) => {
+    setConfirmConfig({
+      isOpen: true,
+      title: 'Obliterate Project?',
+      message: 'Warning: This will delete the project and all associated tasks forever. Proceed with caution.',
+      type: 'danger',
+      onConfirm: async () => {
+        await API.delete(`/projects/${projectId}`);
+        setProjects(prev => prev.filter(p => p.id !== projectId));
+        if (selectedProject?.id === projectId) {
+          setSelectedProject(null);
+          setTasks([]);
+        }
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+      }
+    });
   };
 
   const editTask = (task) => {
@@ -357,6 +413,11 @@ export default function App() {
     <div className="bg-[image:var(--background-image-mesh-gradient)] bg-[#0a0a0c] h-screen overflow-hidden text-white font-sans selection:bg-[var(--color-brand-primary)] selection:text-white flex flex-col">
       <div className="glow-bg" />
       <Navbar user={user} onLogout={handleLogout} />
+
+      <ConfirmModal 
+        {...confirmConfig} 
+        onCancel={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))} 
+      />
 
       <div className="flex-1 flex overflow-hidden pt-24 px-6 gap-8 max-w-[1800px] mx-auto w-full">
         {/* Sidebar: Projects */}
