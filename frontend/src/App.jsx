@@ -369,7 +369,7 @@ export default function App() {
   const deleteProject = (projectId) => {
     setConfirmConfig({
       isOpen: true,
-      title: 'Obliterate Project?',
+      title: 'Delete Project?',
       message: 'Warning: This will delete the project and all associated tasks forever. Proceed with caution.',
       type: 'danger',
       onConfirm: async () => {
