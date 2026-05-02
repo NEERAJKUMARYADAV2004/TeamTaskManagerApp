@@ -2,20 +2,30 @@
 
 A high-end, glassmorphic task management MVP built with the MERN stack.
 
-## Tech Stack
+## 🚀 Live Demo
+- **Frontend**: [team-task-manager-app-kappa.vercel.app](https://team-task-manager-app-kappa.vercel.app/)
+- **Backend API**: [teamtaskmanagerapp.onrender.com/api](https://teamtaskmanagerapp.onrender.com/api)
+
+## 🎨 Tech Stack
 - **Frontend**: React (Vite), Tailwind CSS (Glassmorphism), Lucide Icons
 - **Backend**: Node.js, Express, Mongoose
 - **Database**: MongoDB (Atlas)
 - **Auth**: Custom JWT-based security (Protect & RestrictTo middlewares)
 
-## Features
+## ✨ Key Features
 - **Elite Glassmorphic UI**: High-end aesthetic with mesh gradients, backdrop blurs, and polished interactions.
+- **Advanced 3-Column Dashboard**: 
+  - **Left Sidebar**: Project management and workspace switching.
+  - **Center Feed**: Independent scrollable task workspace.
+  - **Right Sidebar**: Admin task assignment panel.
+- **Task Descriptions**: Detailed context for every task, displayed in styled cards.
+- **Sticky Architecture**: Fixed sidebars and independent scrolling for a smooth, modern app-like experience.
 - **RBAC (Role Based Access Control)**:
-  - **ADMIN**: Forge projects, assign tasks to specialists, and oversee operations.
+  - **ADMIN**: Forge projects, assign tasks with descriptions, and oversee operations.
   - **MEMBER**: Focused workspace for assigned tasks with status deployment.
 - **Task Analytics**: Overdue indicators and visual status badges (Todo, In-Progress, Done).
 
-## Local Setup
+## 🛠️ Local Setup
 
 ### 1. Database
 You need a MongoDB instance (Local or Atlas). Set your `DATABASE_URL` in `backend/.env`:
@@ -38,11 +48,7 @@ npm install
 npm run dev
 ```
 
-## Railway Deployment
-1. **GitHub**: Push this repository to GitHub.
-2. **Railway**:
-   - Connect your GitHub repo.
-   - Add **MongoDB Plugin** or provide your `DATABASE_URL` from Atlas.
-   - Ensure `JWT_SECRET` is set in the environment variables.
-   - Railway will automatically detect the entry points.
-3. **Frontend**: Deploy the `dist` folder to Vercel or use Railway's static hosting.
+## 🌐 Deployment Info
+- **Frontend**: Deployed on **Vercel**.
+- **Backend**: Deployed on **Render**.
+- **Database**: Hosted on **MongoDB Atlas**.
