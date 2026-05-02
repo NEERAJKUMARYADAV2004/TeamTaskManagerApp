@@ -156,7 +156,13 @@ const TaskCard = ({ task, onStatusChange, onDelete, onEdit, isAdmin }) => {
         </span>
       </div>
       
-      <p className="text-white/60 text-xs italic">{task.description || 'No description provided.'}</p>
+      {task.description ? (
+        <p className="text-white/60 text-xs leading-relaxed bg-white/5 p-3 rounded-xl border border-white/5 italic">
+          {task.description}
+        </p>
+      ) : (
+        <p className="text-white/20 text-xs italic">No description provided.</p>
+      )}
 
       <div className="flex items-center justify-between mt-auto pt-4 border-t border-[var(--color-glass-light)]">
         <div className={`flex items-center gap-1.5 text-xs ${isOverdue ? 'text-rose-400 font-bold' : 'text-white/40'}`}>
@@ -448,6 +454,12 @@ export default function App() {
                         className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none"
                         value={newTask.title}
                         onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+                      />
+                      <textarea 
+                        placeholder="Task Description"
+                        className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none min-h-[80px] resize-none"
+                        value={newTask.description}
+                        onChange={e => setNewTask({ ...newTask, description: e.target.value })}
                       />
                       <select 
                         required className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs"
