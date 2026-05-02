@@ -51,8 +51,8 @@ const Button = ({ children, onClick, className = "", variant = "primary" }) => {
 };
 
 const Navbar = ({ user, onLogout }) => (
-  <nav className="p-6 fixed top-0 w-full z-50">
-    <GlassCard className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center bg-[var(--color-glass-dark)]">
+  <nav className="fixed top-0 w-full z-50 h-24 flex items-center px-6">
+    <GlassCard className="w-full max-w-[1800px] mx-auto px-6 py-4 flex justify-between items-center bg-[var(--color-glass-dark)]">
       <div className="flex items-center gap-3">
         <LayoutDashboard className="text-[var(--color-brand-primary)]" />
         <h1 className="text-xl font-black tracking-tighter">AuraTask <span className="text-[var(--color-brand-secondary)] text-xs ml-2 uppercase font-black">{user.role}</span></h1>
@@ -354,13 +354,13 @@ export default function App() {
   );
 
   return (
-    <div className="bg-[image:var(--background-image-mesh-gradient)] bg-[#0a0a0c] min-h-screen text-white font-sans selection:bg-[var(--color-brand-primary)] selection:text-white">
+    <div className="bg-[image:var(--background-image-mesh-gradient)] bg-[#0a0a0c] h-screen overflow-hidden text-white font-sans selection:bg-[var(--color-brand-primary)] selection:text-white flex flex-col">
       <div className="glow-bg" />
       <Navbar user={user} onLogout={handleLogout} />
 
-      <div className="pt-32 px-6 max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 pb-10">
+      <div className="flex-1 flex overflow-hidden pt-24 px-6 gap-8 max-w-[1800px] mx-auto w-full">
         {/* Sidebar: Projects */}
-        <aside className="w-full lg:w-80 flex flex-col gap-6">
+        <aside className="w-80 flex flex-col gap-6 overflow-y-auto custom-scrollbar pb-10">
           <GlassCard className="p-6 bg-[var(--color-glass-dark)]">
             <h2 className="text-xs font-black uppercase text-white/40 mb-6 tracking-widest flex items-center gap-2">
               <Briefcase size={14} /> Projects
@@ -424,63 +424,18 @@ export default function App() {
           </GlassCard>
         </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 flex flex-col gap-8">
+        {/* Main Content: Task Feed */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar pb-10 px-2">
           {!selectedProject ? (
-            <GlassCard className="flex-1 flex flex-col items-center justify-center p-20 text-white/20">
+            <GlassCard className="h-full flex flex-col items-center justify-center p-20 text-white/20">
               <LayoutDashboard size={80} strokeWidth={1} className="mb-4" />
               <p className="text-xl font-black">Select a workspace to begin</p>
             </GlassCard>
           ) : (
-            <>
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                  <h2 className="text-5xl font-black mb-2 tracking-tighter">{selectedProject.name}</h2>
-                  <p className="text-white/40">{selectedProject.description}</p>
-                </div>
-                {user.role === 'ADMIN' && (
-                  <GlassCard className="p-6 w-full md:w-80 border-[var(--color-brand-primary)]">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xs font-black uppercase text-indigo-400">
-                        {editingTask ? 'Edit Task' : 'Assign Task'}
-                      </h3>
-                      {editingTask && (
-                        <button onClick={cancelEdit} className="text-[10px] text-white/40 hover:text-rose-400 uppercase font-black">Cancel</button>
-                      )}
-                    </div>
-                    <form onSubmit={assignTask} className="space-y-3">
-                      <input 
-                        placeholder="Task Title" required
-                        className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none"
-                        value={newTask.title}
-                        onChange={e => setNewTask({ ...newTask, title: e.target.value })}
-                      />
-                      <textarea 
-                        placeholder="Task Description"
-                        className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none min-h-[80px] resize-none"
-                        value={newTask.description}
-                        onChange={e => setNewTask({ ...newTask, description: e.target.value })}
-                      />
-                      <select 
-                        required className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs"
-                        value={newTask.assignedTo}
-                        onChange={e => setNewTask({ ...newTask, assignedTo: e.target.value })}
-                      >
-                        <option value="" className="bg-[#1a1a1a] text-white">Assign To...</option>
-                        {members.map(m => <option key={m.id} value={m.id} className="bg-[#1a1a1a] text-white">{m.name}</option>)}
-                      </select>
-                      <input 
-                        type="date" required
-                        className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs"
-                        value={newTask.dueDate}
-                        onChange={e => setNewTask({ ...newTask, dueDate: e.target.value })}
-                      />
-                      <Button className="w-full text-xs">
-                        {editingTask ? 'Update Task' : 'Assign Task'}
-                      </Button>
-                    </form>
-                  </GlassCard>
-                )}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-5xl font-black mb-2 tracking-tighter">{selectedProject.name}</h2>
+                <p className="text-white/40">{selectedProject.description}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -496,9 +451,56 @@ export default function App() {
                 ))}
                 {tasks.length === 0 && <p className="text-white/20 text-center col-span-full py-20 font-bold">No tasks found in this workspace</p>}
               </div>
-            </>
+            </div>
           )}
         </main>
+
+        {/* Right Sidebar: Assign Task */}
+        {user.role === 'ADMIN' && selectedProject && (
+          <aside className="w-80 overflow-y-auto custom-scrollbar pb-10">
+            <GlassCard className="p-6 border-[var(--color-brand-primary)] bg-[var(--color-glass-dark)]">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xs font-black uppercase text-indigo-400">
+                  {editingTask ? 'Edit Task' : 'Assign Task'}
+                </h3>
+                {editingTask && (
+                  <button onClick={cancelEdit} className="text-[10px] text-white/40 hover:text-rose-400 uppercase font-black">Cancel</button>
+                )}
+              </div>
+              <form onSubmit={assignTask} className="space-y-3">
+                <input 
+                  placeholder="Task Title" required
+                  className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none"
+                  value={newTask.title}
+                  onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+                />
+                <textarea 
+                  placeholder="Task Description"
+                  className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs outline-none min-h-[80px] resize-none"
+                  value={newTask.description}
+                  onChange={e => setNewTask({ ...newTask, description: e.target.value })}
+                />
+                <select 
+                  required className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs"
+                  value={newTask.assignedTo}
+                  onChange={e => setNewTask({ ...newTask, assignedTo: e.target.value })}
+                >
+                  <option value="" className="bg-[#1a1a1a] text-white">Assign To...</option>
+                  {members.map(m => <option key={m.id} value={m.id} className="bg-[#1a1a1a] text-white">{m.name}</option>)}
+                </select>
+                <input 
+                  type="date" required
+                  className="w-full bg-white/5 border border-[var(--color-glass-light)] rounded-lg px-3 py-2 text-xs"
+                  value={newTask.dueDate}
+                  onChange={e => setNewTask({ ...newTask, dueDate: e.target.value })}
+                />
+                <Button className="w-full text-xs">
+                  {editingTask ? 'Update Task' : 'Assign Task'}
+                </Button>
+              </form>
+            </GlassCard>
+          </aside>
+        )}
       </div>
     </div>
   );
